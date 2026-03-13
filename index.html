@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PM Roadmap">
+<title>Raj's PM Roadmap</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
+.app{max-width:390px;margin:0 auto;background:#f2f2f7;min-height:100vh;padding-bottom:80px}
+.header{background:#fff;padding:16px 16px 12px;border-bottom:0.5px solid #e0e0e5}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.header h1{font-size:20px;font-weight:700;color:#1c1c1e}
+.header p{font-size:13px;color:#6e6e73}
+.streak{background:#fff3cd;color:#856404;font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px}
+.tabs{display:flex;background:#fff;border-bottom:0.5px solid #e0e0e5;position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:12px 4px;font-size:12px;font-weight:600;color:#8e8e93;cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all 0.15s}
+.tab.active{color:#007aff;border-bottom-color:#007aff}
+.content{padding:16px}
+.section-label{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 8px}
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.metric{background:#fff;border-radius:10px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.metric-num{font-size:24px;font-weight:700;color:#1c1c1e}
+.metric-lbl{font-size:11px;color:#8e8e93;margin-top:2px}
+.tip-card{background:#fff8e6;border-radius:12px;padding:14px 16px;margin-bottom:14px;border-left:4px solid #f0a500}
+.tip-label{font-size:10px;font-weight:700;color:#b07d00;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px}
+.tip-text{font-size:13px;color:#3d3400;line-height:1.55}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0f5;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.task-item:last-child{border-bottom:none}
+.task-item:active{opacity:0.7}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid #c7c7cc;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.check.done{background:#34c759;border-color:#34c759}
+.check.done::after{content:'';width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);display:block}
+.task-text{font-size:13px;color:#1c1c1e;line-height:1.5;flex:1}
+.task-text.done{color:#aeaeb2;text-decoration:line-through}
+.tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:3px}
+.tag-ai{background:#e3f0ff;color:#0055cc}
+.tag-network{background:#e6f4ec;color:#1a6b3a}
+.tag-skill{background:#f0eeff;color:#4a2fad}
+.tag-job{background:#fff3e0;color:#8a4500}
+.phase-card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer}
+.phase-header{display:flex;align-items:center;gap:10px}
+.phase-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.phase-info{flex:1}
+.phase-title{font-size:14px;font-weight:600;color:#1c1c1e}
+.phase-sub{font-size:12px;color:#8e8e93;margin-top:2px}
+.pct-badge{font-size:12px;font-weight:700}
+.prog-bar{height:4px;background:#f0f0f5;border-radius:2px;overflow:hidden;margin-top:10px}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.4s}
+.prog-label{font-size:11px;color:#aeaeb2;margin-top:4px}
+.phase-tasks{margin-top:12px;padding-top:12px;border-top:0.5px solid #f0f0f5;display:none}
+.phase-tasks.open{display:block}
+.chevron{font-size:12px;color:#aeaeb2;transition:transform 0.2s;margin-left:4px}
+.chevron.open{transform:rotate(90deg)}
+.res-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid #f0f0f5;cursor:pointer}
+.res-item:last-child{border-bottom:none}
+.res-icon{width:34px;height:34px;border-radius:9px;background:#f2f2f7;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.res-info{flex:1}
+.res-title{font-size:13px;font-weight:600;color:#1c1c1e}
+.res-sub{font-size:12px;color:#8e8e93;margin-top:1px}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px;background:#e3f0ff;color:#0055cc;white-space:nowrap}
+.badge.free{background:#e6f4ec;color:#1a6b3a}
+.badge.paid{background:#fff3e0;color:#8a4500}
+.badge.daily{background:#f0eeff;color:#4a2fad}
+.prog-phase{margin-bottom:16px}
+.prog-phase-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-phase-title{font-size:13px;font-weight:600;color:#1c1c1e}
+.prog-phase-count{font-size:13px;color:#8e8e93}
+.overall-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);text-align:center}
+.overall-num{font-size:40px;font-weight:700;color:#007aff}
+.overall-lbl{font-size:14px;color:#8e8e93;margin-top:4px}
+.reset-btn{background:none;border:1px solid #ff3b30;color:#ff3b30;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:block;margin:20px auto 0;-webkit-tap-highlight-color:transparent}
+.reset-btn:active{opacity:0.7}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Raj's PM Roadmap</h1>
+      <p>Director / GPM · 90-day sprint</p>
+    </div>
+    <div class="streak" id="streak">🔥 0 days</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('today',this)">Today</div>
+  <div class="tab" onclick="switchTab('phases',this)">Phases</div>
+  <div class="tab" onclick="switchTab('resources',this)">Resources</div>
+  <div class="tab" onclick="switchTab('progress',this)">Progress</div>
+</div>
+
+<div id="tab-today" class="content">
+  <div class="metric-row">
+    <div class="metric"><div class="metric-num" id="m-done">0</div><div class="metric-lbl">Done</div></div>
+    <div class="metric"><div class="metric-num" id="m-week">0%</div><div class="metric-lbl">Week 1</div></div>
+    <div class="metric"><div class="metric-num" id="m-total">29</div><div class="metric-lbl">Total</div></div>
+  </div>
+  <div class="tip-card">
+    <div class="tip-label">Today's top 1% move</div>
+    <div class="tip-text" id="tip-text"></div>
+  </div>
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;color:#1c1c1e;margin-bottom:10px">Week 1 — Start here</div>
+    <div id="today-tasks"></div>
+  </div>
+</div>
+
+<div id="tab-phases" class="content" style="display:none">
+  <div id="phases-list"></div>
+</div>
+
+<div id="tab-resources" class="content" style="display:none">
+  <div class="section-label">Books</div>
+  <div class="card" id="books-list"></div>
+  <div class="section-label">Newsletters</div>
+  <div class="card" id="news-list"></div>
+  <div class="section-label">Communities</div>
+  <div class="card" id="comm-list"></div>
+  <div class="section-label">AI tools to master daily</div>
+  <div class="card" id="tools-list"></div>
+</div>
+
+<div id="tab-progress" class="content" style="display:none">
+  <div class="overall-card">
+    <div class="overall-num" id="overall-pct">0%</div>
+    <div class="overall-lbl">overall roadmap complete</div>
+  </div>
+  <div id="progress-phases"></div>
+  <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+</div>
+
+</div>
+
+<script>
+const KEY='raj_v2';
+const phases=[
+  {id:'p1',title:'Positioning',sub:'Weeks 1–4 · Become the obvious hire',icon:'🎯',color:'#007aff',bg:'#e3f0ff',
+   tasks:[
+    {id:'t1',text:'Revise CV — reframe M&A exit (INR 400 Cr) as a boardroom-level credential',tag:'job'},
+    {id:'t2',text:'Update LinkedIn headline: "Director of Product | Gaming & OTT Growth | AI-Augmented PM"',tag:'job'},
+    {id:'t3',text:'Write PM Thesis — 500-word draft: your POV on retention in regulated gaming',tag:'skill'},
+    {id:'t4',text:'Post 200-word PM Thesis on LinkedIn as an article',tag:'network'},
+    {id:'t5',text:'Apply to 10 Director/GPM roles via warm channels — no cold job board spray',tag:'job'},
+    {id:'t6',text:"Join Lenny's Slack — search India PMs in directory, DM 3 this week",tag:'network'},
+    {id:'t7',text:'Attend one ProductFolks India event this month',tag:'network'},
+  ]},
+  {id:'p2',title:'Skills & AI',sub:'Month 1–2 · Build your unfair advantage',icon:'🧠',color:'#5856d6',bg:'#f0eeff',
+   tasks:[
+    {id:'t8',text:'Build AI prompt library — 10 reusable PM prompts: PRD, OKR draft, stakeholder memo',tag:'ai'},
+    {id:'t9',text:'Use Claude for 30 min daily on actual work tasks — make it a habit',tag:'ai'},
+    {id:'t10',text:'Write one product teardown of a target company — post on LinkedIn, tag their Head of Product',tag:'skill'},
+    {id:'t11',text:'Build 3 portfolio artifacts — one-page case studies: Adda52 Poker, Rummy, Birdeye',tag:'skill'},
+    {id:'t12',text:'Practice Idea Compression: dump messy ideas into Claude → get prioritization matrix → challenge it',tag:'ai'},
+    {id:'t13',text:'Read The Cold Start Problem — map chapter 3 to Adda52 growth model',tag:'skill'},
+    {id:'t14',text:'Run a pre-mortem on a past product decision — write it as a 1-pager artifact',tag:'skill'},
+  ]},
+  {id:'p3',title:'Interview Mastery',sub:'Month 2–3 · Close offers, not just interviews',icon:'🏆',color:'#ff9500',bg:'#fff3e0',
+   tasks:[
+    {id:'t15',text:'Do 5 mock interviews using Exponent app — record every session and review',tag:'skill'},
+    {id:'t16',text:'Prepare 30-60-90 day plan per company — send it the night before your final round',tag:'job'},
+    {id:'t17',text:'For each target: read last 2 earnings calls or 50 app store reviews — find their pain',tag:'job'},
+    {id:'t18',text:'Use Reverse Reference: find ex-employee at target company, get warm intro without asking',tag:'network'},
+    {id:'t19',text:'Practice JTBD framing for design questions — map every feature to the job users are hiring it for',tag:'skill'},
+    {id:'t20',text:'Practice TAM sizing out loud — opportunity calculation in under 60 seconds',tag:'skill'},
+  ]},
+  {id:'p4',title:'Network & Visibility',sub:'Month 2–3 · Get found, not just hired',icon:'🌐',color:'#34c759',bg:'#e6f4ec',
+   tasks:[
+    {id:'t21',text:'Post one LinkedIn insight per week: hook (2 sentences) → insight → takeaway. Run for 8 weeks',tag:'network'},
+    {id:'t22',text:'Comment meaningfully on 3 CPO/VP of Product posts this week — substance, not flattery',tag:'network'},
+    {id:'t23',text:'Reach out to 3 PMs at target companies for "advice conversations" (not job asks)',tag:'network'},
+    {id:'t24',text:'Write a public teardown of a product gap at one of your top 3 target companies',tag:'network'},
+    {id:'t25',text:'Join GrowthX India — attend one live hiring or community event',tag:'network'},
+  ]},
+  {id:'p5',title:'Offer & Close',sub:'Month 3 · Close on your terms',icon:'✍️',color:'#007aff',bg:'#e3f0ff',
+   tasks:[
+    {id:'t26',text:'Define your walk-away on 3 axes: equity, scope of ownership, reporting line — not just base salary',tag:'job'},
+    {id:'t27',text:'Enrol in Reforge or Maven AI PM course — mention it in final round conversations',tag:'skill'},
+    {id:'t28',text:'Prepare 3 anchoring stories: growth win, failure + lesson, cross-functional alignment',tag:'skill'},
+    {id:'t29',text:'Research Director PM compensation in India — Glassdoor, Levels.fyi, LinkedIn Salary',tag:'job'},
+  ]},
+];
+
+const tips=[
+  "The Reverse Reference play: find someone who left your target company. They often volunteer to refer you without being asked.",
+  "Your INR 400 Cr M&A exit is a boardroom-level credential. Almost no PM candidate has it. Lead with it explicitly.",
+  "Write a 1-page PRD for a gap at a company you're interviewing with. Share it at the end of your final round. Less than 1% do this.",
+  "Before any interview: read their last 50 app reviews. Find 1 retention problem they haven't solved. Name it in the room.",
+  "Post once a week on LinkedIn. Format: 2-sentence hook → one insight from RMG → one transferable takeaway. 8 weeks builds authority.",
+  "Use Claude pre-mortems: 'My Q2 roadmap failed completely. What are the most likely 5 reasons?' Do this before every standup.",
+  "Your PM Thesis: 'Why retention in regulated gaming needs different mechanics than SaaS.' Frame your depth as a superpower.",
+  "Jobs to Be Done framing: 'Users aren't using poker for cards — they're hiring it for controlled risk and social proof.' Top 1% answer.",
+  "Regret Minimization for product bets: 'If we're wrong, will we regret not trying?' Cite Bezos. Signals strategic maturity.",
+  "Send the 30-60-90 plan the night before your final round. Under 1% of candidates do this. It closes offers.",
+  "Cohort analysis: know why two cohorts with identical D7 retention diverge at D90. Practise this answer. Senior interviewers ask it.",
+  "'Advice conversations' convert 3–5x better than 'job conversations'. Change the framing in every single outreach message.",
+];
+
+const books=[
+  {icon:'📘',title:'Working Backwards',sub:'The Amazon PM operating system — Bryar & Carr',badge:'Book'},
+  {icon:'📗',title:'The Cold Start Problem',sub:'Network effects & consumer growth — Andrew Chen',badge:'Book'},
+  {icon:'🔁',title:'Continuous Discovery Habits',sub:'Embed user research weekly — Teresa Torres',badge:'Book'},
+  {icon:'🎲',title:'Thinking in Bets',sub:'Decisions under uncertainty — Annie Duke',badge:'Book'},
+  {icon:'⚔️',title:'The Art of Action',sub:'Strategy without micromanagement — Stephen Bungay',badge:'Book'},
+];
+const newsletters=[
+  {icon:'✉️',title:"Lenny's Newsletter",sub:'lennysnewsletter.com — read every issue',badge:'Newsletter'},
+  {icon:'🔬',title:'Reforge Artifacts',sub:'reforge.com/blog — real strategy teardowns',badge:'Newsletter'},
+  {icon:'📈',title:'First Round Review',sub:'review.firstround.com — operator deep dives',badge:'Newsletter'},
+  {icon:'🌱',title:'Growth Memo — Kevin Indig',sub:'Growth PM thinking for consumer products',badge:'Newsletter'},
+];
+const communities=[
+  {icon:'💬',title:"Lenny's Slack",sub:'Highest signal PM community globally',badge:'paid'},
+  {icon:'🇮🇳',title:'ProductFolks India',sub:'productfolks.in — 50k+ PMs, speak or write',badge:'free'},
+  {icon:'🚀',title:'GrowthX India',sub:'Growth PM community, direct hiring access',badge:'free'},
+  {icon:'🔁',title:'Reforge Community',sub:'Senior growth PMs — comes with course',badge:'paid'},
+];
+const tools=[
+  {icon:'🤖',title:'Claude',sub:'PRDs, strategy memos, pre-mortems, stakeholder updates',badge:'daily'},
+  {icon:'🔍',title:'Perplexity Pro',sub:'Competitive research with cited sources',badge:'daily'},
+  {icon:'📝',title:'Notion AI',sub:'Meeting summaries, doc generation',badge:'daily'},
+  {icon:'🎯',title:'Exponent',sub:'PM mock interview practice',badge:'daily'},
+];
+
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{done:{},streak:0,lastDay:''}}catch{return{done:{},streak:0,lastDay:''}}}
+function saveState(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch{}}
+let state=getState();
+let openPhases={};
+
+function allTasks(){return phases.flatMap(p=>p.tasks)}
+
+function checkStreak(){
+  const today=new Date().toDateString();
+  if(state.lastDay===today) return;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  state.streak = state.lastDay===yesterday ? (state.streak||0)+1 : 1;
+  state.lastDay=today;
+  saveState(state);
+}
+
+function toggleTask(id,e){
+  if(e) e.stopPropagation();
+  state.done[id]=!state.done[id];
+  checkStreak();
+  saveState(state);
+  renderAll();
+}
+
+function resetAll(){
+  if(confirm('Reset all progress?')){state={done:{},streak:0,lastDay:''};saveState(state);renderAll();}
+}
+
+function switchTab(name,el){
+  ['today','phases','resources','progress'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function togglePhase(id){
+  openPhases[id]=!openPhases[id];
+  renderPhases();
+}
+
+function renderAll(){
+  checkStreak();
+  const all=allTasks();
+  const doneCount=all.filter(t=>state.done[t.id]).length;
+  const w1=phases[0].tasks;
+  const w1done=w1.filter(t=>state.done[t.id]).length;
+  document.getElementById('m-done').textContent=doneCount;
+  document.getElementById('m-week').textContent=Math.round(w1done/w1.length*100)+'%';
+  document.getElementById('m-total').textContent=all.length;
+  document.getElementById('streak').textContent='🔥 '+(state.streak||0)+' days';
+
+  const tipIdx=Math.floor(Date.now()/86400000)%tips.length;
+  document.getElementById('tip-text').textContent=tips[tipIdx];
+
+  const todayEl=document.getElementById('today-tasks');
+  todayEl.innerHTML='';
+  phases[0].tasks.forEach(t=>{
+    const d=!!state.done[t.id];
+    const el=document.createElement('div');
+    el.className='task-item';
+    el.onclick=()=>toggleTask(t.id);
+    el.innerHTML=`<div class="check ${d?'done':''}"></div><div><div class="task-text ${d?'done':''}">${t.text}</div><span class="tag tag-${t.tag}">${t.tag}</span></div>`;
+    todayEl.appendChild(el);
+  });
+
+  renderPhases();
+  renderProgress();
+}
+
+function renderPhases(){
+  const el=document.getElementById('phases-list');
+  el.innerHTML='';
+  phases.forEach(p=>{
+    const total=p.tasks.length;
+    const done=p.tasks.filter(t=>state.done[t.id]).length;
+    const pct=Math.round(done/total*100);
+    const isOpen=!!openPhases[p.id];
+    const card=document.createElement('div');
+    card.className='phase-card';
+    card.onclick=()=>togglePhase(p.id);
+    card.innerHTML=`
+      <div class="phase-header">
+        <div class="phase-icon" style="background:${p.bg}">${p.icon}</div>
+        <div class="phase-info">
+          <div class="phase-title">${p.title} <span class="chevron ${isOpen?'open':''}">›</span></div>
+          <div class="phase-sub">${p.sub}</div>
+        </div>
+        <div class="pct-badge" style="color:${p.color}">${pct}%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${p.color}"></div></div>
+      <div class="prog-label">${done} of ${total} tasks complete</div>`;
+    const tl=document.createElement('div');
+    tl.className='phase-tasks'+(isOpen?' open':'');
+    p.tasks.forEach(t=>{
+      const d=!!state.done[t.id];
+      const ti=document.createElement('div');
+      ti.className='task-item';
+      ti.onclick=(e)=>toggleTask(t.id,e);
+      ti.innerHTML=`<div class="check ${d?'done':''}"></div><div><div class="task-text ${d?'done':''}">${t.text}</div><span class="tag tag-${t.tag}">${t.tag}</span></div>`;
+      tl.appendChild(ti);
+    });
+    card.appendChild(tl);
+    el.appendChild(card);
+  });
+}
+
+function renderProgress(){
+  const all=allTasks();
+  const doneAll=all.filter(t=>state.done[t.id]).length;
+  document.getElementById('overall-pct').textContent=Math.round(doneAll/all.length*100)+'%';
+  const el=document.getElementById('progress-phases');
+  el.innerHTML='';
+  phases.forEach(p=>{
+    const total=p.tasks.length;
+    const done=p.tasks.filter(t=>state.done[t.id]).length;
+    const pct=Math.round(done/total*100);
+    const d=document.createElement('div');
+    d.className='prog-phase';
+    d.innerHTML=`<div class="prog-phase-header"><span class="prog-phase-title">${p.icon} ${p.title}</span><span class="prog-phase-count">${done}/${total}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${p.color}"></div></div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderResources(){
+  function makeList(items,elId){
+    const el=document.getElementById(elId);
+    items.forEach(r=>{
+      const d=document.createElement('div');
+      d.className='res-item';
+      d.innerHTML=`<div class="res-icon">${r.icon}</div><div class="res-info"><div class="res-title">${r.title}</div><div class="res-sub">${r.sub}</div></div><span class="badge ${r.badge||''}">${r.badge||'Read'}</span>`;
+      el.appendChild(d);
+    });
+  }
+  makeList(books,'books-list');
+  makeList(newsletters,'news-list');
+  makeList(communities,'comm-list');
+  makeList(tools,'tools-list');
+}
+
+renderResources();
+renderAll();
+</script>
+</body>
+</html>
