@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Raj · 30-Day AI">
+<title>Raj's 30-Day AI Schedule</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
+.app{max-width:420px;margin:0 auto;background:#f2f2f7;min-height:100vh;padding-bottom:30px}
+
+.header{background:#1a1a2e;padding:20px 16px 16px}
+.htop{display:flex;justify-content:space-between;align-items:flex-start}
+.htitle{font-size:21px;font-weight:700;color:#fff;margin-bottom:2px}
+.hsub{font-size:12px;color:rgba(255,255,255,.55)}
+.hbadge{background:rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.hstat{background:rgba(255,255,255,.09);border-radius:9px;padding:10px 8px;text-align:center}
+.hstat-num{font-size:20px;font-weight:700;color:#fff}
+.hstat-lbl{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+
+.week-tabs{display:flex;background:#fff;border-bottom:.5px solid #e0e0e5;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.week-tabs::-webkit-scrollbar{display:none}
+.wtab{flex-shrink:0;padding:11px 14px;font-size:12px;font-weight:600;color:#8e8e93;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap}
+.wtab.active{color:#1a1a2e;border-bottom-color:#1a1a2e}
+
+.content{padding:14px 14px 24px}
+
+.week-intro{border-radius:11px;padding:13px 15px;margin-bottom:14px}
+.wi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.wi-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.wi-sub{font-size:12px;line-height:1.55;opacity:.85}
+
+.day-card{background:#fff;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.day-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.day-header:active{opacity:.75}
+.day-num{width:38px;height:38px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.dn-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.dn-num{font-size:17px;font-weight:700;line-height:1}
+.day-info{flex:1;min-width:0}
+.day-title{font-size:13px;font-weight:600;color:#1c1c1e;line-height:1.35}
+.day-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
+.day-time{font-size:11px;color:#8e8e93}
+.day-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+.day-check{width:22px;height:22px;border-radius:50%;border:1.5px solid #c7c7cc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.day-check.done{background:#34c759;border-color:#34c759}
+.day-check.done::after{content:'';width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);display:block}
+
+.day-body{padding:0 14px 14px;display:none}
+.day-body.open{display:block}
+.day-body-inner{border-top:.5px solid #f0f0f5;padding-top:12px}
+
+.task-block{margin-bottom:12px}
+.tb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.tb-text{font-size:13px;color:#3a3a3c;line-height:1.6}
+.tb-text strong{font-weight:600;color:#1c1c1e}
+
+.raj-angle{background:#fff8e6;border-left:3px solid #f0a500;border-radius:0 8px 8px 0;padding:9px 11px;margin-top:9px}
+.ra-label{font-size:10px;font-weight:700;color:#8a5000;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ra-text{font-size:12px;color:#5a3a00;line-height:1.55}
+
+.output-box{background:#f0f0f8;border-radius:8px;padding:9px 11px;margin-top:9px}
+.ob-label{font-size:10px;font-weight:700;color:#4a2fad;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ob-text{font-size:12px;color:#2a1a6a;line-height:1.5}
+
+.resource-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.rpill{font-size:11px;padding:3px 9px;border-radius:15px;background:#f2f2f7;color:#636366;border:.5px solid #e0e0e5}
+
+.tag-tool{background:#e3f0ff;color:#0055cc}
+.tag-concept{background:#f0eeff;color:#4a2fad}
+.tag-project{background:#e6f4ec;color:#1a6b3a}
+.tag-career{background:#fff3e0;color:#8a4500}
+.tag-reflect{background:#fce4ec;color:#880e4f}
+
+.prog-bar-wrap{height:4px;background:#f0f0f5;border-radius:2px;margin-top:10px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+
+.section-label{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin:4px 0 10px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <div class="htop">
+    <div>
+      <div class="htitle">30-Day AI Schedule</div>
+      <div class="hsub">Raj Sheth · Director/GPM track</div>
+    </div>
+    <div class="hbadge" id="day-badge">Day 1</div>
+  </div>
+  <div class="hstats">
+    <div class="hstat"><div class="hstat-num" id="s-done">0</div><div class="hstat-lbl">Done</div></div>
+    <div class="hstat"><div class="hstat-num" id="s-pct">0%</div><div class="hstat-lbl">Complete</div></div>
+    <div class="hstat"><div class="hstat-num" id="s-streak">0</div><div class="hstat-lbl">Streak</div></div>
+  </div>
+</div>
+
+<div class="week-tabs" id="week-tabs"></div>
+<div class="content" id="content"></div>
+
+</div>
+<script>
+const KEY='raj_30day_v1';
+
+const weeks=[
+{
+  id:'w1', label:'Week 1', title:'AI as your daily thinking tool',
+  sub:'Build the habit before the theory. Every task this week plugs AI directly into work Raj already does — roadmaps, stakeholder updates, user research — using his RMG and OTT context.',
+  color:'#1a5fa8', bg:'#e3f0ff', textColor:'#0c3a6e',
+  days:[
+    {
+      d:1, title:'Your first hour with Claude', time:'45 min', tag:'tool',
+      task:'Sign up for Claude.ai (free). Open a conversation and paste this: "I am a CPO with 20 years of experience in real money gaming and OTT media in India. I am targeting Director of Product roles. Ask me 5 questions that a VP of Product would ask in a first-round interview." Answer them. Review Claude\'s feedback.',
+      angle:'This is not a demo — it is your first real rehearsal. Every answer you give today becomes raw material for interview prep across the next 30 days.',
+      output:'Screenshot your best answer. Save it as "Interview answer bank — Day 1."',
+      resources:['Claude.ai — free','No setup needed']
+    },
+    {
+      d:2, title:'Rewrite your Adda52 story with AI', time:'45 min', tag:'career',
+      task:'Paste your current Adda52 Poker bullet points from your CV into Claude. Ask: "Rewrite each bullet to lead with business outcome, not product action. The reader is a VP of Product at a growth-stage tech company. Quantify everything possible." Compare old vs new. Pick the 3 strongest rewrites.',
+      angle:'The INR 400 Cr M&A exit bullet needs to say what YOU specifically did that contributed to that outcome. Ask Claude to help you make it more specific and attributable.',
+      output:'3 rewritten CV bullets. Replace them in your CV doc today.',
+      resources:['Claude.ai','Your existing CV']
+    },
+    {
+      d:3, title:'Synthesise 30 Adda52 app reviews', time:'40 min', tag:'tool',
+      task:'Go to the Google Play Store. Copy 20-30 recent Adda52 Poker reviews (mix of 1-star and 5-star). Paste into Claude. Ask: "Extract the top 3 user pain points with frequency, top 2 unmet desires, 1 surprising insight, and 3 feature hypotheses ranked by user impact." Read the output critically.',
+      angle:'This exact technique — AI-assisted research synthesis — is what you will demonstrate in interviews when asked "how do you use AI in your PM workflow?" You now have a real, specific, credible example.',
+      output:'Save the synthesis output. This becomes Interview Story #1.',
+      resources:['Claude.ai','Google Play Store (Adda52 reviews)']
+    },
+    {
+      d:4, title:'Build your first 5 PM prompts', time:'50 min', tag:'tool',
+      task:'Open a Notion page titled "Raj\'s PM Prompt Library." Write and test these 5 prompts, each tailored to your context: (1) PRD generator for gaming features, (2) user research synthesiser, (3) competitive analysis builder, (4) exec update writer, (5) pre-mortem runner. For each: write the prompt, run it on a real example from your past, refine until the output is genuinely useful.',
+      angle:'Use Adda52 Rummy\'s relaunch as the test case for every prompt. By the end you have 5 prompts that work on your actual domain — not generic templates.',
+      output:'Notion page with 5 tested, refined prompts.',
+      resources:['Claude.ai','Notion (free)']
+    },
+    {
+      d:5, title:'AI pre-mortem on your best launch', time:'40 min', tag:'concept',
+      task:'Pick Adda52 Poker v2.0 — your biggest recent launch. Write a 3-sentence description of the launch and its goals. Paste into Claude: "This product launched successfully but assume it had failed completely 6 months in. List the 7 most likely reasons for failure ranked by probability. Be specific to the real-money gaming context in India." Read the output. Note which risks you actually managed and which you missed.',
+      angle:'This exercise has two uses: (1) it sharpens your own product thinking retrospectively, (2) it gives you a structured story to tell in interviews about how you manage launch risk.',
+      output:'Pre-mortem document for Adda52 v2.0. Save it — it\'s a portfolio artifact.',
+      resources:['Claude.ai','Your product knowledge']
+    },
+    {
+      d:6, title:'Write your first LinkedIn AI post', time:'35 min', tag:'career',
+      task:'Ask Claude: "Write 3 versions of a LinkedIn post about using AI to synthesise user research in a real-money gaming product. Audience: product managers and hiring managers. Format: 2-sentence hook → 3-line insight from RMG context → 1 takeaway. Max 100 words each. Tone: direct, no jargon." Pick the best version, edit it to sound like you, and post it.',
+      angle:'This is the start of your public AI signal. You are not claiming to be an AI expert — you are sharing what you tried and what worked. That honesty is more credible than any credential.',
+      output:'LinkedIn post published. Screenshot engagement after 48 hrs.',
+      resources:['Claude.ai','LinkedIn']
+    },
+    {
+      d:7, title:'Week 1 review + prompt library to 10', time:'50 min', tag:'reflect',
+      task:'Review everything from days 1-6. Ask Claude: "Based on these 6 tasks I completed this week [describe them briefly], what gaps in my AI fluency should I prioritise in week 2 for Director PM interviews?" Then expand your prompt library from 5 to 10 by adding: (6) 30-60-90 day plan generator, (7) North Star + input metrics builder, (8) job description decoder, (9) stakeholder objection handler, (10) feature vs project vs product decider.',
+      angle:'The prompt library is a living artifact. By day 30 it should have 20+ prompts. At that point it becomes something you can screenshot and share on LinkedIn as proof of AI fluency.',
+      output:'Prompt library at 10. Week 1 reflection note (3 bullets: learned, applied, will use daily).',
+      resources:['Claude.ai','Notion']
+    }
+  ]
+},
+{
+  id:'w2', label:'Week 2', title:'AI product strategy vocabulary',
+  sub:'This week builds the strategic layer — concepts, frameworks, and vocabulary that hiring managers at Director level actively test. All anchored to Raj\'s gaming and media domain.',
+  color:'#4a2fad', bg:'#f0eeff', textColor:'#2e1a6e',
+  days:[
+    {
+      d:8, title:'How LLMs actually work — 60-min deep dive', time:'60 min', tag:'concept',
+      task:'Watch Andrej Karpathy\'s "Intro to Large Language Models" on YouTube (search: "Karpathy intro LLMs"). It is 1 hour and the clearest explanation anywhere. Take notes on: tokens, context window, temperature, hallucination, and emergent behaviour. After watching, explain each concept out loud as if to a non-technical Head of Marketing at a gaming company.',
+      angle:'The test: can you explain hallucination risk to a gaming CEO in 30 seconds without using the word "hallucination"? Try: "The model is extremely confident even when wrong — like a player who bluffs even with no read." Find your own gaming analogy.',
+      output:'5 gaming-world analogies for LLM concepts. These will make your interview answers memorable.',
+      resources:['YouTube: Karpathy "Intro to LLMs" (free, 1hr)']
+    },
+    {
+      d:9, title:'AI metrics for gaming products', time:'55 min', tag:'concept',
+      task:'Read Reforge\'s "How to set metrics for AI products" (search: "reforge AI product metrics"). Then for a hypothetical Adda52 AI feature — an AI opponent suggestion engine — define: (1) North Star Metric, (2) 4 input metrics, (3) 2 guardrail metrics, (4) how you would detect hallucination or bad AI output, (5) what D7/D30 retention impact you would target.',
+      angle:'This is the most fumbled topic in senior AI PM interviews. You will not fumble it because you have concrete RMG metrics already in your head. The trick is mapping your existing retention/monetisation instincts onto AI-specific measurement.',
+      output:'1-page AI metrics framework for a gaming AI feature. Portfolio artifact.',
+      resources:['Reforge blog (free)','Claude.ai to structure the framework']
+    },
+    {
+      d:10, title:'RAG — the tech behind most AI features', time:'50 min', tag:'concept',
+      task:'Complete DeepLearning.AI "LangChain: Chat with Your Data" short course — it is free and takes about 90 minutes but just do the first 45 min today (modules 1-3). The goal is not to code — it is to understand what RAG means so you can commission it, scope it in a PRD, and explain it to a board. After, write a 1-para plain-English description of RAG as if explaining to your engineering lead on Day 1 at a new company.',
+      angle:'Real application: a Adda52 player history RAG system. "When a player asks our AI coach why they keep losing, the system retrieves their last 50 hands before generating the response." This is your go-to RAG example in every interview.',
+      output:'Plain-English RAG explanation (saved). Adda52 RAG example (saved).',
+      resources:['learn.deeplearning.ai — free','Claude.ai to test your explanation']
+    },
+    {
+      d:11, title:'Build vs buy vs RAG decision framework', time:'45 min', tag:'concept',
+      task:'Open Claude. Ask: "Help me build a decision framework for when a gaming product company should (a) use an off-the-shelf LLM API via prompting, (b) build RAG on top of proprietary data, (c) fine-tune a model, (d) buy a vertical AI SaaS. Include decision criteria: data sensitivity, customisation need, cost, latency, and team capability." Then apply the framework to 4 real Adda52 scenarios: (1) customer support bot, (2) AI game coach, (3) fraud detection, (4) personalised lobby.',
+      angle:'This framework, applied to your own product context, is a complete answer to "how would you approach building AI features?" in any Director interview. Memorise your 4 Adda52 examples.',
+      output:'Decision framework doc + 4 Adda52 application examples. Memorise for interviews.',
+      resources:['Claude.ai','a16z AI Canon (free — search it)']
+    },
+    {
+      d:12, title:'AI risks + your RMG regulatory superpower', time:'50 min', tag:'concept',
+      task:'Read Anthropic\'s "Core Views on AI Safety" (anthropic.com) — skim for the risk categories relevant to consumer products. Then list every AI risk that is specifically amplified in real-money gaming: hallucination in financial advice, bias against certain player profiles, over-reliance on AI game advice, PII leakage in chat, regulatory non-compliance. For each risk, write a guardrail you would implement as a PM.',
+      angle:'Most PM candidates have never shipped in a regulated consumer vertical. You have 5+ years of it. Frame every AI risk answer through the lens of responsible gaming obligations. "In RMG, we already manage compulsive behaviour risk — AI guardrails are not new to us, they are an extension of what we already build." This answer is rare and impressive.',
+      output:'AI risk + guardrail document for RMG context. This is your answer to "what are the risks of AI in consumer products?"',
+      resources:['anthropic.com (free)','Google PAIR Guidebook (free)']
+    },
+    {
+      d:13, title:'Teardown: AI in a competitor product', time:'60 min', tag:'project',
+      task:'Pick A23 Poker (your acquirer). Research their product — look for any AI or personalisation features in the app. Then write a structured teardown in Claude: (1) what job is the AI hired to do, (2) what data advantage does A23 have, (3) what feedback loop makes their AI better over time, (4) what is the moat, (5) what would you change as their new Director of Product. Write this as a 500-word LinkedIn article.',
+      angle:'This is a portfolio artifact AND a direct signal to A23\'s hiring team. Tagging A23\'s Head of Product on LinkedIn when you publish is the highest-ROI 2-minute action you will take this month.',
+      output:'500-word teardown draft. Schedule for LinkedIn publish on Day 14.',
+      resources:['A23 Poker app + website','Claude.ai for structure','LinkedIn']
+    },
+    {
+      d:14, title:'Publish teardown + Week 2 review', time:'45 min', tag:'career',
+      task:'Polish and publish your A23 Poker AI teardown on LinkedIn. Tag their Head of Product if you can find them. Then do Week 2 review: ask Claude "I have spent week 2 learning LLMs, AI metrics, RAG, build/buy decisions, AI risks, and doing a competitor teardown. What should I prioritise in week 3 to be credible in Director PM interviews about AI strategy at a gaming/media company?" Use the answer to plan week 3.',
+      angle:'Publishing on LinkedIn is not optional. It is how you convert private learning into public signal. Even 200 views puts you in front of 3-4 hiring managers.',
+      output:'Teardown published. Week 3 plan confirmed.',
+      resources:['LinkedIn','Claude.ai']
+    }
+  ]
+},
+{
+  id:'w3', label:'Week 3', title:'AI as your interview weapon',
+  sub:'This week converts knowledge into interview performance. Every session produces a rehearsed answer, a portfolio artifact, or a credibility signal that hiring managers can find before they meet Raj.',
+  color:'#0f6e56', bg:'#e1f5ee', textColor:'#064a38',
+  days:[
+    {
+      d:15, title:'Mock interview — AI workflow questions', time:'55 min', tag:'career',
+      task:'Open Claude. Prompt: "You are a VP of Product at a Series B gaming company in India. Interview me for a Director of Product role. Focus only on how I use AI in my PM workflow. Ask one question at a time. After each answer give feedback: clarity out of 5, specificity out of 5, what a top 1% answer would add. Be rigorous." Do at least 4 questions. Aim to get 4+ on both scores.',
+      angle:'Your three strongest workflow answers should be: (1) AI research synthesis on Adda52 reviews, (2) AI pre-mortem before v2.0 launch, (3) AI prompt library for PRDs and exec updates. Drill these until they are under 90 seconds each and highly specific.',
+      output:'3 polished AI workflow answers. Save them in your interview answer bank.',
+      resources:['Claude.ai']
+    },
+    {
+      d:16, title:'AI agents — the next product frontier', time:'50 min', tag:'concept',
+      task:'Read Anthropic\'s "Building Effective Agents" guide (search: anthropic.com building effective agents). Takes 30 minutes. Then design a concept for an AI agent for Adda52: an agent that monitors player sessions, detects tilt (emotional loss-chasing behaviour — you know this pattern deeply), and sends a personalised break prompt. Define: trigger conditions, tools the agent uses, guardrails, how you would A/B test it, success metrics.',
+      angle:'Tilt detection in poker is a well-known problem you have lived with for years. Framing an AI agent solution using your domain knowledge is a genuinely world-class interview answer that almost no candidate can match.',
+      output:'1-page AI agent concept doc for tilt detection. This is your answer to "describe an AI feature you would build."',
+      resources:['anthropic.com/research/building-effective-agents (free)','Claude.ai']
+    },
+    {
+      d:17, title:'PRD for an AI feature — full draft', time:'60 min', tag:'project',
+      task:'Write a complete 1-page PRD for the tilt detection AI agent from Day 16. Use Claude to structure it: problem statement, user jobs, proposed solution (with AI architecture note — which approach: prompting/RAG/agent), success metrics (include AI-specific metrics), risks + guardrails, out of scope. Target reader: your engineering lead and Head of Responsible Gaming.',
+      angle:'This PRD demonstrates three things simultaneously: deep RMG domain knowledge, AI architecture fluency, and responsible product thinking. It is the strongest possible Director PM portfolio artifact.',
+      output:'Full PRD saved. This is your #1 interview artifact — bring it to every final round.',
+      resources:['Claude.ai','Your Adda52 product knowledge']
+    },
+    {
+      d:18, title:'Mock interview — AI strategy questions', time:'55 min', tag:'career',
+      task:'Return to Claude mock interview. This time: "Focus on AI product strategy. Ask me questions like: how would you prioritise AI features on a roadmap, when would you build vs buy AI, what metrics would you use for an AI coach feature, what are the risks of AI in a regulated gaming product. One question at a time. Rigorous feedback after each." Do 4 questions. Your goal: 4+ on specificity every time.',
+      angle:'Use the build/buy/RAG framework from Day 11 and the AI metrics framework from Day 9. Use your RMG risk angle from Day 12. These three frameworks cover 80% of AI strategy interview questions.',
+      output:'4 polished AI strategy answers added to your answer bank.',
+      resources:['Claude.ai']
+    },
+    {
+      d:19, title:'OTT angle — AI in media streaming', time:'45 min', tag:'concept',
+      task:'Your OTT experience at Hungama, Times Network is a second dimension most gaming PM candidates lack. Spend today mapping AI applications to media streaming: recommendation engines, content tagging, personalised notifications, AI-generated thumbnails, churn prediction. Ask Claude: "For an OTT platform in India with 5M MAU, what are the 3 highest-ROI AI features and what does each require in terms of data, infrastructure, and PM effort?" Critique the answer using your Hungama knowledge.',
+      angle:'In interviews for companies that have both gaming and media products (Dream11, Nazara, Sony LIV, JioCinema), you can credibly speak to AI in both verticals. This is a rare combination.',
+      output:'AI opportunity map for OTT (3 features, prioritised). Adds to your versatility story.',
+      resources:['Claude.ai','Your Hungama + Times Network knowledge']
+    },
+    {
+      d:20, title:'30-60-90 day AI plan for a target company', time:'50 min', tag:'project',
+      task:'Pick one company you are actively targeting for a Director PM role. Ask Claude: "Write a 30-60-90 day plan for a new Director of Product joining [company]. The candidate has deep expertise in RMG and OTT. The plan should show: (week 1-4) discovery and listening, (month 2) first bets identified, (month 3) roadmap shipped and team trust built. Include how AI will be used as a PM tool in each phase." Edit to make it specific to that company.',
+      angle:'Send this plan to the hiring manager the night before your final round. Every single time. It is the move that closes offers at Director level.',
+      output:'30-60-90 day plan for your top target company. Ready to send.',
+      resources:['Claude.ai','Company research (website, LinkedIn, Glassdoor)']
+    },
+    {
+      d:21, title:'Week 3 review + LinkedIn post #3', time:'40 min', tag:'career',
+      task:'Write and post LinkedIn article #3: "What 3 weeks of daily AI learning taught me about product management in regulated industries." Format: 3 lessons, each with a specific example from your gaming or OTT background, each with one actionable takeaway for other PMs. Ask Claude to give you 3 headline options — pick the most provocative one.',
+      angle:'By now you have published 3 LinkedIn posts about AI. That is more than 95% of PMs in India. Hiring managers who check your profile will see a pattern of intentional upskilling — not a one-off post.',
+      output:'LinkedIn post #3 published. Track total views across all 3 posts.',
+      resources:['Claude.ai','LinkedIn']
+    }
+  ]
+},
+{
+  id:'w4', label:'Week 4', title:'Convert learning into hireable signal',
+  sub:'The final week turns everything Raj has learned into artifacts, credentials, and polished interview answers that hiring managers can find, verify, and remember.',
+  color:'#ba7517', bg:'#faeeda', textColor:'#633806',
+  days:[
+    {
+      d:22, title:'Google AI Essentials certification', time:'120 min', tag:'career',
+      task:'Enrol in and complete Google AI Essentials on Coursera (coursera.org — search "Google AI Essentials"). It is free to audit and takes approximately 2-3 hours. Complete modules 1-3 today (the core AI concepts modules). The certificate goes directly on LinkedIn. This is the single most recognised free AI credential for non-technical roles in 2025.',
+      angle:'After completing: add the certificate to LinkedIn immediately. The line on your profile reads: "Google AI Essentials · Google · 2025." This appears in recruiter searches.',
+      output:'Google AI Essentials — modules 1-3 complete. Certificate pending.',
+      resources:['coursera.org — Google AI Essentials (free to audit)']
+    },
+    {
+      d:23, title:'Complete Google AI Essentials + add to LinkedIn', time:'90 min', tag:'career',
+      task:'Complete the remaining modules of Google AI Essentials. Download your certificate. Add it to LinkedIn under Licences and Certifications. Then complete DeepLearning.AI "Prompt Engineering for Developers" (learn.deeplearning.ai — 1 hour, free). This is the second credential. Add it to LinkedIn as well.',
+      angle:'Two certifications added in two days. Your LinkedIn now shows: Google AI Essentials + DeepLearning.AI Prompt Engineering. You are now ahead of 90% of PM candidates in India on visible AI signal.',
+      output:'Two certifications on LinkedIn. Screenshot the profile update.',
+      resources:['coursera.org','learn.deeplearning.ai — free']
+    },
+    {
+      d:24, title:'Rewrite CV with AI language throughout', time:'60 min', tag:'career',
+      task:'Open your CV. For every role, ask Claude: "Here is my experience at [company]. Rewrite 2 bullets that demonstrate AI-augmented PM work, either by framing AI-adjacent decisions I made (recommendation engines, personalisation, fraud systems) OR by adding how I would use AI tools to do this work now." The goal: every role section should have at least one AI-relevant sentence.',
+      angle:'You do not need to have "shipped an LLM" to have AI on your CV. You made decisions at Adda52 and Hungama that touched AI-powered systems — recommendation engines, content personalisation, fraud detection. Frame those truthfully.',
+      output:'Updated CV with AI language in every role section. Save as new version.',
+      resources:['Claude.ai','Your existing CV']
+    },
+    {
+      d:25, title:'Build your AI portfolio page in Notion', time:'60 min', tag:'project',
+      task:'Create a public Notion page titled "Raj Sheth — AI PM Work." Include: (1) your tilt detection AI agent PRD from Day 17, (2) your A23 Poker AI teardown from Day 13, (3) your AI metrics framework from Day 9, (4) your prompt library (now 10+ prompts). Make it clean, navigable, and public. Copy the Notion link.',
+      angle:'This URL goes in your LinkedIn bio and in every job application email. It is a portfolio link that 99% of Director PM candidates do not have. When a hiring manager clicks it, they see structured, domain-specific AI thinking — not a list of tools.',
+      output:'Public Notion portfolio page live. URL copied and added to LinkedIn bio.',
+      resources:['Notion (free)','Your artifacts from Days 9, 13, 17']
+    },
+    {
+      d:26, title:'Mock final-round interview — full simulation', time:'70 min', tag:'career',
+      task:'Full final-round simulation with Claude. Prompt: "You are the CPO of a leading Indian gaming company interviewing a Director of Product candidate for 45 minutes. Ask 6 questions covering: (1) AI in their PM workflow, (2) AI feature prioritisation, (3) an AI feature they would build, (4) AI metrics, (5) AI risks in regulated products, (6) their 30-60-90 day plan. One at a time. Score each answer 1-5 on: specificity, strategic depth, and Director-level thinking. Be rigorous." Complete the full simulation without stopping.',
+      angle:'Target scores: 4+ on every answer. Your gaming background + the frameworks from this month mean you should be able to hit this consistently. If you score below 4 on any answer, drill it for 15 minutes immediately.',
+      output:'Full simulation complete. Note which 2 answers need most polish.',
+      resources:['Claude.ai']
+    },
+    {
+      d:27, title:'Polish the 2 weakest interview answers', time:'50 min', tag:'career',
+      task:'Take the 2 answers that scored lowest in yesterday\'s simulation. For each: ask Claude "Here is my current answer to [question]. What are the 3 specific things that would make this a 5/5 Director-level answer?" Incorporate the feedback. Rewrite the answer. Test it out loud until it flows naturally under 90 seconds. Record yourself on your phone and watch it back.',
+      angle:'The 90-second rule: if you can\'t answer a question in under 90 seconds with specificity, you do not know it well enough yet. Keep iterating until you can.',
+      output:'2 polished answers added to answer bank. Answer bank now has 10+ entries.',
+      resources:['Claude.ai']
+    },
+    {
+      d:28, title:'Outreach to 3 AI PMs on LinkedIn', time:'40 min', tag:'career',
+      task:'Find 3 PMs at companies you are targeting who have "AI" in their title or recent posts. Send each a message: "Hi [name], I have spent the last 4 weeks building AI fluency specifically for PM work in gaming and media. I read your post on [specific topic] and found the [specific point] really resonant with what I am seeing in RMG. Would you be open to a 15-minute conversation?" Personalise every message.',
+      angle:'Reference something specific they posted or wrote. Generic messages get ignored. Specific messages from someone clearly upskilling in your domain get responses. You are no longer cold — you have 3 published LinkedIn posts and a Notion portfolio to point to.',
+      output:'3 outreach messages sent. Track responses.',
+      resources:['LinkedIn']
+    },
+    {
+      d:29, title:'Write your 30-day reflection post', time:'45 min', tag:'career',
+      task:'Write your most important LinkedIn post of the month: "30 days of daily AI learning as a product leader — what I learned, what surprised me, and what I use every day." Ask Claude for 3 headline options. Structure: (1) what you expected AI to be, (2) what it actually is for a PM (3 specific tools/habits), (3) one thing you would tell every PM to do this week. Tag 3 peers or industry contacts at the end.',
+      angle:'This post signals completion, consistency, and credibility all at once. It is the post that generates the most inbound because it is a transformation story, not a tip. Hiring managers who see 4 posts over 30 days about your AI learning journey will reach out — this has happened to others who have done this.',
+      output:'Reflection post published. Pin it to your LinkedIn profile.',
+      resources:['Claude.ai','LinkedIn']
+    },
+    {
+      d:30, title:'Final audit + what comes next', time:'60 min', tag:'reflect',
+      task:'Audit everything you have built: (1) prompt library — is it at 15+ prompts? (2) portfolio page — does it have 3+ artifacts? (3) LinkedIn — 4+ posts about AI? (4) certifications — Google AI Essentials and DeepLearning.AI on profile? (5) interview answer bank — 10+ polished answers? (6) CV — AI language in every role? For anything missing, spend the time completing it today. Then ask Claude: "Given this 30-day journey in AI for a Director PM in gaming and media, what should I focus on in months 2 and 3 to continue building credibility?"',
+      angle:'You are not done. 30 days builds foundation. Month 2 is where you use AI in actual job interviews and get hired. The learning compounds — keep the daily habit of 30 minutes with AI tools regardless of what else happens.',
+      output:'Full audit complete. Months 2-3 plan written. Prompt library, portfolio, and answer bank all finalised.',
+      resources:['Claude.ai','Notion','LinkedIn']
+    }
+  ]
+}
+];
+
+const KEY_STORE='raj_30day_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY_STORE))||{done:{},streak:0,lastDay:'',start:Date.now()}}catch{return{done:{},streak:0,lastDay:'',start:Date.now()}}}
+function saveState(s){try{localStorage.setItem(KEY_STORE,JSON.stringify(s))}catch{}}
+let state=getState();
+let activeWeek='w1';
+let openDays={};
+
+function allDays(){return weeks.flatMap(w=>w.days)}
+function dayNum(){return Math.min(30,Math.floor((Date.now()-state.start)/86400000)+1)}
+
+function checkStreak(){
+  const today=new Date().toDateString();
+  if(state.lastDay===today)return;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  state.streak=state.lastDay===yesterday?(state.streak||0)+1:1;
+  state.lastDay=today;
+  saveState(state);
+}
+
+function toggleDay(d){
+  state.done[d]=!state.done[d];
+  checkStreak();
+  saveState(state);
+  renderStats();
+  renderContent();
+}
+
+function toggleOpen(d){
+  openDays[d]=!openDays[d];
+  renderContent();
+}
+
+function renderStats(){
+  const all=allDays();
+  const done=all.filter(d=>state.done[d.d]).length;
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-pct').textContent=Math.round(done/all.length*100)+'%';
+  document.getElementById('s-streak').textContent=state.streak||0;
+  document.getElementById('day-badge').textContent='Day '+dayNum();
+}
+
+function renderTabs(){
+  const cont=document.getElementById('week-tabs');
+  cont.innerHTML='';
+  weeks.forEach(w=>{
+    const t=document.createElement('div');
+    t.className='wtab'+(activeWeek===w.id?' active':'');
+    t.textContent=w.label+' — '+w.title.split(' ').slice(0,3).join(' ')+'...';
+    t.onclick=()=>{activeWeek=w.id;renderTabs();renderContent()};
+    cont.appendChild(t);
+  });
+}
+
+function tagClass(tag){
+  return{tool:'tag-tool',concept:'tag-concept',project:'tag-project',career:'tag-career',reflect:'tag-reflect'}[tag]||'tag-tool';
+}
+
+function renderContent(){
+  const wk=weeks.find(w=>w.id===activeWeek);
+  const cont=document.getElementById('content');
+  cont.innerHTML='';
+
+  const intro=document.createElement('div');
+  intro.className='week-intro';
+  intro.style.background=wk.bg;
+  intro.innerHTML=`<div class="wi-label" style="color:${wk.textColor}">${wk.label} · ${wk.days.length} days</div><div class="wi-title" style="color:${wk.textColor}">${wk.title}</div><div class="wi-sub" style="color:${wk.textColor}">${wk.sub}</div>`;
+  const done=wk.days.filter(d=>state.done[d.d]).length;
+  const pct=Math.round(done/wk.days.length*100);
+  intro.innerHTML+=`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${wk.color}"></div></div>`;
+  cont.appendChild(intro);
+
+  const sl=document.createElement('div');
+  sl.className='section-label';
+  sl.textContent='Daily tasks — tap to expand';
+  cont.appendChild(sl);
+
+  wk.days.forEach(day=>{
+    const isOpen=!!openDays[day.d];
+    const isDone=!!state.done[day.d];
+
+    const card=document.createElement('div');
+    card.className='day-card';
+
+    const header=document.createElement('div');
+    header.className='day-header';
+    header.onclick=()=>toggleOpen(day.d);
+
+    const dn=document.createElement('div');
+    dn.className='day-num';
+    dn.style.background=wk.bg;
+    dn.innerHTML=`<div class="dn-label" style="color:${wk.textColor}">Day</div><div class="dn-num" style="color:${wk.color}">${day.d}</div>`;
+
+    const info=document.createElement('div');
+    info.className='day-info';
+    info.innerHTML=`<div class="day-title">${day.title}</div><div class="day-meta"><span class="day-time">${day.time}</span><span class="day-tag ${tagClass(day.tag)}">${day.tag}</span></div>`;
+
+    const chk=document.createElement('div');
+    chk.className='day-check'+(isDone?' done':'');
+    chk.onclick=(e)=>{e.stopPropagation();toggleDay(day.d)};
+
+    header.appendChild(dn);
+    header.appendChild(info);
+    header.appendChild(chk);
+
+    const body=document.createElement('div');
+    body.className='day-body'+(isOpen?' open':'');
+
+    const inner=document.createElement('div');
+    inner.className='day-body-inner';
+
+    inner.innerHTML=`
+      <div class="task-block">
+        <div class="tb-label" style="color:${wk.color}">Today's task</div>
+        <div class="tb-text">${day.task}</div>
+      </div>
+      <div class="raj-angle">
+        <div class="ra-label">Raj's angle</div>
+        <div class="ra-text">${day.angle}</div>
+      </div>
+      <div class="output-box">
+        <div class="ob-label">Output to save</div>
+        <div class="ob-text">${day.output}</div>
+      </div>
+      <div class="resource-pills">${day.resources.map(r=>`<span class="rpill">${r}</span>`).join('')}</div>`;
+
+    body.appendChild(inner);
+    card.appendChild(header);
+    card.appendChild(body);
+    cont.appendChild(card);
+  });
+}
+
+checkStreak();
+renderStats();
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>

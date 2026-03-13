@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI in 30 Days">
+<title>AI Job Roadmap — 30 Days</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
+.app{max-width:390px;margin:0 auto;background:#f2f2f7;min-height:100vh;padding-bottom:90px}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);padding:20px 16px 16px}
+.header-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:2px}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.65)}
+.header-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.day-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px}
+.streak-pill{background:#ff9f0a;color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px}
+
+/* PROGRESS RING */
+.ring-wrap{display:flex;gap:10px;margin-top:14px}
+.ring-stat{flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:10px;text-align:center}
+.ring-num{font-size:22px;font-weight:700;color:#fff}
+.ring-lbl{font-size:10px;color:rgba(255,255,255,0.6);margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;background:#fff;border-bottom:0.5px solid #e0e0e5;position:sticky;top:0;z-index:20}
+.tab{flex:1;padding:11px 2px;font-size:11px;font-weight:600;color:#8e8e93;cursor:pointer;text-align:center;border-bottom:2.5px solid transparent;transition:all 0.15s}
+.tab.active{color:#0f3460;border-bottom-color:#0f3460}
+
+.content{padding:16px}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.card-title{font-size:14px;font-weight:700;color:#1c1c1e;margin-bottom:10px}
+
+/* WEEK PILLS */
+.week-selector{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
+.week-pill{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border:1.5px solid #e0e0e5;color:#8e8e93;background:#fff;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+.week-pill.active{background:#0f3460;color:#fff;border-color:#0f3460}
+
+/* TASKS */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0f5;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.task-item:last-child{border-bottom:none}
+.task-item:active{opacity:0.7}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid #c7c7cc;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.check.done{background:#34c759;border-color:#34c759}
+.check.done::after{content:'';width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);display:block}
+.task-body{flex:1}
+.task-text{font-size:13px;color:#1c1c1e;line-height:1.5}
+.task-text.done{color:#aeaeb2;text-decoration:line-through}
+.task-meta{display:flex;align-items:center;gap:6px;margin-top:4px}
+.tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:7px}
+.tag-tool{background:#e3f0ff;color:#0055cc}
+.tag-concept{background:#f0eeff;color:#4a2fad}
+.tag-project{background:#e6f4ec;color:#1a6b3a}
+.tag-career{background:#fff3e0;color:#8a4500}
+.tag-prompt{background:#fce4ec;color:#880e4f}
+.effort{font-size:10px;color:#aeaeb2}
+
+/* TIP */
+.tip-card{background:#0f3460;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.tip-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.tip-text{font-size:13px;color:#fff;line-height:1.55}
+
+/* CONCEPT CARDS */
+.concept-card{background:#fff;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.concept-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent}
+.concept-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.concept-info{flex:1}
+.concept-title{font-size:14px;font-weight:600;color:#1c1c1e}
+.concept-sub{font-size:12px;color:#8e8e93;margin-top:2px}
+.concept-body{padding:0 16px 14px;border-top:0.5px solid #f0f0f5;display:none}
+.concept-body.open{display:block}
+.concept-body p{font-size:13px;color:#3a3a3c;line-height:1.6;margin-top:10px}
+.concept-body .why{font-size:12px;font-weight:600;color:#0f3460;margin-top:10px;margin-bottom:4px}
+.concept-body ul{padding-left:16px}
+.concept-body ul li{font-size:13px;color:#3a3a3c;line-height:1.6;margin-bottom:4px}
+.chevron{font-size:14px;color:#aeaeb2;transition:transform 0.2s}
+.chevron.open{transform:rotate(90deg)}
+
+/* PROMPTS */
+.prompt-box{background:#f8f8ff;border:1px solid #d0d0f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.prompt-box:active{opacity:0.8}
+.prompt-label{font-size:10px;font-weight:700;color:#4a2fad;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.04em}
+.prompt-text{font-size:12px;color:#3a3a3c;line-height:1.55;font-family:monospace}
+.copy-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1c1c1e;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.copy-toast.show{opacity:1}
+
+/* TOOLS */
+.tool-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid #f0f0f5;cursor:pointer}
+.tool-row:last-child{border-bottom:none}
+.tool-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tool-info{flex:1}
+.tool-name{font-size:13px;font-weight:600;color:#1c1c1e}
+.tool-use{font-size:12px;color:#8e8e93;margin-top:1px}
+.free-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px}
+.free{background:#e6f4ec;color:#1a6b3a}
+.paid{background:#fff3e0;color:#8a4500}
+
+/* PROGRESS TAB */
+.week-prog{margin-bottom:14px}
+.wp-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.wp-title{font-size:13px;font-weight:600;color:#1c1c1e}
+.wp-count{font-size:13px;color:#8e8e93}
+.prog-bar{height:6px;background:#f0f0f5;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.section-label{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 8px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.metric{background:#fff;border-radius:10px;padding:11px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.metric-num{font-size:22px;font-weight:700;color:#0f3460}
+.metric-lbl{font-size:11px;color:#8e8e93;margin-top:2px}
+.reset-btn{background:none;border:1px solid #ff3b30;color:#ff3b30;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:block;margin:20px auto 0}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <div class="header-title">AI Skills in 30 Days</div>
+  <div class="header-sub">Built for Raj · Get job-ready with AI</div>
+  <div class="header-row">
+    <div class="day-badge" id="day-badge">Day 1 of 30</div>
+    <div class="streak-pill" id="streak-pill">🔥 0 streak</div>
+  </div>
+  <div class="ring-wrap">
+    <div class="ring-stat"><div class="ring-num" id="h-done">0</div><div class="ring-lbl">Done</div></div>
+    <div class="ring-stat"><div class="ring-num" id="h-pct">0%</div><div class="ring-lbl">Complete</div></div>
+    <div class="ring-stat"><div class="ring-num" id="h-left">30</div><div class="ring-lbl">Tasks left</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="sw('today',this)">Today</div>
+  <div class="tab" onclick="sw('learn',this)">Learn</div>
+  <div class="tab" onclick="sw('prompts',this)">Prompts</div>
+  <div class="tab" onclick="sw('tools',this)">Tools</div>
+  <div class="tab" onclick="sw('progress',this)">Track</div>
+</div>
+
+<!-- TODAY TAB -->
+<div id="tab-today" class="content">
+  <div class="tip-card">
+    <div class="tip-label">AI insight of the day</div>
+    <div class="tip-text" id="daily-tip"></div>
+  </div>
+
+  <div class="week-selector" id="week-selector"></div>
+
+  <div class="card">
+    <div class="card-title" id="week-title">Week 1 tasks</div>
+    <div id="week-tasks"></div>
+  </div>
+</div>
+
+<!-- LEARN TAB -->
+<div id="tab-learn" class="content" style="display:none">
+  <div class="section-label">Core AI concepts every PM must know</div>
+  <div id="concepts-list"></div>
+</div>
+
+<!-- PROMPTS TAB -->
+<div id="tab-prompts" class="content" style="display:none">
+  <div class="section-label">Copy & use these daily — your PM prompt library</div>
+  <div id="prompts-list"></div>
+</div>
+
+<!-- TOOLS TAB -->
+<div id="tab-tools" class="content" style="display:none">
+  <div class="section-label">Week 1–2 — Start here (free)</div>
+  <div class="card" id="tools-w1"></div>
+  <div class="section-label">Week 3–4 — Go deeper</div>
+  <div class="card" id="tools-w2"></div>
+  <div class="section-label">Job signal tools — put these on your CV</div>
+  <div class="card" id="tools-cv"></div>
+</div>
+
+<!-- PROGRESS TAB -->
+<div id="tab-progress" class="content" style="display:none">
+  <div class="metric-row">
+    <div class="metric"><div class="metric-num" id="p-done">0</div><div class="metric-lbl">Done</div></div>
+    <div class="metric"><div class="metric-num" id="p-pct">0%</div><div class="metric-lbl">Complete</div></div>
+    <div class="metric"><div class="metric-num" id="p-streak">0</div><div class="metric-lbl">Streak</div></div>
+  </div>
+  <div class="section-label">Progress by week</div>
+  <div id="week-progress"></div>
+  <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+</div>
+
+<div class="copy-toast" id="toast">Copied!</div>
+
+<script>
+const KEY='raj_ai_v1';
+const weeks=[
+  {
+    id:'w1',title:'Week 1 — AI Foundations',color:'#007aff',
+    sub:'Days 1–7 · Understand what AI actually is',
+    tasks:[
+      {id:'a1',text:'Sign up for Claude.ai free and have a 20-min conversation about your own product career',tag:'tool',effort:'20 min'},
+      {id:'a2',text:'Sign up for ChatGPT free — compare how Claude and GPT answer the same PM question differently',tag:'tool',effort:'30 min'},
+      {id:'a3',text:'Watch Andrej Karpathy\'s "Intro to LLMs" on YouTube (1hr) — the clearest explanation of how AI works',tag:'concept',effort:'1 hr'},
+      {id:'a4',text:'Learn what a "prompt" is by rewriting the same question 3 ways and comparing the outputs',tag:'prompt',effort:'20 min'},
+      {id:'a5',text:'Use Claude to rewrite your LinkedIn headline 5 different ways — pick the best one',tag:'career',effort:'15 min'},
+      {id:'a6',text:'Use AI to summarize a 10-page document or article — paste text, ask for 5 bullet summary',tag:'tool',effort:'15 min'},
+      {id:'a7',text:'Post on LinkedIn: "I\'m spending 30 days getting AI-fluent. Here\'s what I learned today." (just 3 lines)',tag:'career',effort:'10 min'},
+    ]
+  },
+  {
+    id:'w2',title:'Week 2 — AI for PM Work',color:'#5856d6',
+    sub:'Days 8–14 · Use AI in your actual job',
+    tasks:[
+      {id:'b1',text:'Use Claude to write a full PRD from a one-line brief: "An onboarding flow for new poker players"',tag:'project',effort:'30 min'},
+      {id:'b2',text:'Paste 10 user reviews of Adda52 into Claude — ask it to extract top 3 pain points and suggest features',tag:'prompt',effort:'20 min'},
+      {id:'b3',text:'Use AI to generate a competitive analysis: "Compare Adda52, A23, and PokerBaazi on retention mechanics"',tag:'concept',effort:'30 min'},
+      {id:'b4',text:'Ask Claude to create a North Star Metric + input metrics tree for a mobile gaming product',tag:'concept',effort:'20 min'},
+      {id:'b5',text:'Use AI to write your PM Thesis first draft — then rewrite it yourself using AI feedback',tag:'career',effort:'45 min'},
+      {id:'b6',text:'Build your first 10-prompt library in a Notion doc — save prompts that gave great results this week',tag:'prompt',effort:'30 min'},
+      {id:'b7',text:'Use Perplexity to research "best retention mechanics in real money gaming 2024" — read and annotate',tag:'tool',effort:'30 min'},
+    ]
+  },
+  {
+    id:'w3',title:'Week 3 — AI as Interview Weapon',color:'#ff9500',
+    sub:'Days 15–21 · Stand out in every conversation',
+    tasks:[
+      {id:'c1',text:'Ask Claude to role-play as a VP of Product interviewing you — do a 20-min mock interview, get feedback',tag:'career',effort:'30 min'},
+      {id:'c2',text:'Use AI to pre-mortem your last 3 product decisions: "Assume this failed. Top 5 reasons why?"',tag:'prompt',effort:'30 min'},
+      {id:'c3',text:'Generate a 30-60-90 day plan for a Director PM role at a company you are targeting using Claude',tag:'career',effort:'30 min'},
+      {id:'c4',text:'Learn what "RAG", "fine-tuning", and "prompt engineering" mean — be able to explain each in 30 seconds',tag:'concept',effort:'45 min'},
+      {id:'c5',text:'Use AI to write a product teardown of a competitor — post it on LinkedIn this week',tag:'career',effort:'1 hr'},
+      {id:'c6',text:'Ask Claude: "What AI trends should a Director PM know for interviews in 2025?" — study the answer',tag:'concept',effort:'30 min'},
+      {id:'c7',text:'Practice saying out loud: "I use AI to 10x my output in PRDs, research, and stakeholder comms" — with examples',tag:'career',effort:'20 min'},
+    ]
+  },
+  {
+    id:'w4',title:'Week 4 — AI Credibility',color:'#34c759',
+    sub:'Days 22–30 · Signal expertise to hirers',
+    tasks:[
+      {id:'d1',text:'Build one AI-powered PM tool in Claude Artifacts: a user persona generator for gaming products',tag:'project',effort:'1 hr'},
+      {id:'d2',text:'Complete one free AI course: Google\'s "Introduction to Generative AI" on Coursera (2 hrs)',tag:'concept',effort:'2 hr'},
+      {id:'d3',text:'Add "AI-Augmented Product Development" to your CV skills and LinkedIn — write 2 lines explaining how you use it',tag:'career',effort:'20 min'},
+      {id:'d4',text:'Write a LinkedIn post: "5 ways I use AI as a Product Manager every day" — based on your real 4-week experience',tag:'career',effort:'45 min'},
+      {id:'d5',text:'Use AI to analyse a case study: paste a product failure article, ask "What would you have done differently?"',tag:'concept',effort:'30 min'},
+      {id:'d6',text:'Ask Claude to help you prepare answers for these 3 AI interview questions: (1) How do you use AI in your PM workflow? (2) How would you prioritise AI features on a roadmap? (3) What are the risks of AI in consumer products?',tag:'career',effort:'45 min'},
+      {id:'d7',text:'Send 3 cold messages to AI PMs on LinkedIn — reference your 30-day journey and ask for a 15-min conversation',tag:'career',effort:'30 min'},
+      {id:'d8',text:'Write a short "30-day AI reflection" post on LinkedIn — what you learned, what surprised you, what you will use every day',tag:'career',effort:'30 min'},
+      {id:'d9',text:'Create your final AI prompt library (20+ prompts) in Notion — organise by use case, share a screenshot on LinkedIn',tag:'project',effort:'1 hr'},
+    ]
+  }
+];
+
+const tips=[
+  "AI won't replace PMs — PMs who use AI will replace PMs who don't. Start today, not next week.",
+  "The best prompt is a specific one. Add context: your role, the audience, the format you want, and what bad looks like.",
+  "Use Claude for thinking, not just writing. Ask it to challenge your assumptions before you present to stakeholders.",
+  "Put 'AI-augmented PM workflow' on your CV only when you can give 3 real examples. You'll have them by day 14.",
+  "The 30-second test: if you can't explain what an LLM is in plain English in 30 seconds, you're not ready for senior interviews.",
+  "Every time you use AI to do a task, ask: 'What would I have missed without this?' That's your interview story.",
+  "Post about your AI learning journey on LinkedIn every week. Hiring managers notice consistency, not perfection.",
+  "RAG, fine-tuning, agents — know what these mean at a conceptual level. You don't need to code them. You need to commission them.",
+  "The best use of AI for a PM is synthesis: 50 user reviews → 3 themes → 1 roadmap decision. Practice this daily.",
+  "AI fluency is the new Excel fluency. In 2 years, it will be table stakes. You're early. Use that.",
+];
+
+const concepts=[
+  {
+    icon:'🧠', bg:'#e3f0ff', title:'Large Language Models (LLMs)',
+    sub:'What ChatGPT and Claude actually are',
+    body:'An LLM is a neural network trained on vast amounts of text. It predicts the next word, billions of times, until it can generate coherent, contextual language. It does not "think" — it pattern-matches at enormous scale.',
+    why:'Why a PM must know this',
+    points:['Sets correct expectations about what AI can and cannot do','Helps you scope AI features realistically on a roadmap','Prevents embarrassing mistakes in stakeholder conversations']
+  },
+  {
+    icon:'🎯', bg:'#f0eeff', title:'Prompt Engineering',
+    sub:'The skill that makes AI 10x more useful',
+    body:'Prompt engineering is the art of writing instructions that get better outputs from AI. It involves giving context, specifying format, providing examples, and constraining the response.',
+    why:'Why a PM must know this',
+    points:['Your AI output quality is directly proportional to your prompt quality','PMs who can write great prompts ship 2-3x faster than those who cannot','It is a demonstrable, learnable skill you can show in interviews']
+  },
+  {
+    icon:'🔍', bg:'#e6f4ec', title:'RAG — Retrieval Augmented Generation',
+    sub:'How AI searches your own data',
+    body:'RAG connects an LLM to a database or document store. Instead of relying only on training data, the model retrieves relevant chunks of your specific data first, then generates an answer grounded in those results.',
+    why:'Why a PM must know this',
+    points:['Most enterprise AI features use RAG — customer support bots, internal search, docs assistants','You need to understand it to write accurate PRDs for AI features','It is what separates a "chatbot" from a genuinely useful AI product']
+  },
+  {
+    icon:'🤖', bg:'#fff3e0', title:'AI Agents',
+    sub:'AI that takes actions, not just answers',
+    body:'An AI agent is a system that uses an LLM as its reasoning engine and can take multi-step actions — browse the web, run code, call APIs, manage files — autonomously to complete a goal.',
+    why:'Why a PM must know this',
+    points:['Agents are the next big product category — every company is building them in 2025','As a PM you will need to define scope, guardrails, and success metrics for agent-based features','Understanding agents separates you from 90% of PM candidates immediately']
+  },
+  {
+    icon:'⚙️', bg:'#fce4ec', title:'Fine-tuning vs Prompting',
+    sub:'When to customise the model vs the instruction',
+    body:'Prompting gives the model instructions at runtime. Fine-tuning retrains the model on your specific data, baking in your style and domain knowledge permanently. Fine-tuning is expensive and rarely necessary — 95% of PM use cases are solvable with better prompts.',
+    why:'Why a PM must know this',
+    points:['Avoids over-engineering: most teams waste money fine-tuning when prompting would work','Critical for build vs buy decisions when scoping AI roadmap items','Interview question you will be asked: "When would you fine-tune vs prompt engineer?"']
+  },
+  {
+    icon:'📊', bg:'#e6f4ec', title:'AI Product Metrics',
+    sub:'How to measure AI features — different from normal',
+    body:'AI features need different metrics: accuracy/hallucination rate, user correction rate, confidence scores, task completion with AI vs without, and model latency. Standard engagement metrics miss what matters.',
+    why:'Why a PM must know this',
+    points:['Every company building AI products needs PMs who can define AI-specific success metrics','This is the most commonly fumbled topic in senior PM interviews for AI roles','Your gaming background in retention gives you a strong foundation — map those instincts to AI']
+  },
+  {
+    icon:'⚠️', bg:'#fff3e0', title:'AI Risks & Guardrails',
+    sub:'What can go wrong and how to prevent it',
+    body:'Hallucinations (confident wrong answers), bias in training data, jailbreaks, privacy leakage through prompts, and over-reliance are the core risks. Guardrails are filters, evals, and human-in-the-loop checks that mitigate them.',
+    why:'Why a PM must know this',
+    points:['Regulated industries (gaming, fintech) have zero tolerance for AI errors — your RMG background is directly relevant','Showing you understand AI risks in interviews signals product maturity','A PM who can define guardrails is 10x more valuable than one who only talks about capabilities']
+  },
+];
+
+const prompts=[
+  {label:'PRD generator',tag:'prompt',text:'You are a senior product manager. Write a concise PRD for this feature: [describe feature]. Include: problem statement, user story, success metrics, edge cases, and out of scope. Audience: engineering team. Format: structured sections. Be specific, no fluff.'},
+  {label:'User research synthesiser',tag:'prompt',text:'Here are [N] user reviews/interviews: [paste text]. Extract: (1) top 3 pain points with frequency, (2) top 2 unmet desires, (3) one surprising insight, (4) 3 feature ideas ranked by user impact. Be concise.'},
+  {label:'Mock interview (PM)',tag:'prompt',text:'You are a VP of Product at a top tech company. Interview me for a Director PM role. Ask me one question at a time. After my answer, give specific feedback on: clarity, structure, depth, and what a top 1% answer would include. Start now.'},
+  {label:'Pre-mortem',tag:'prompt',text:'Here is my product plan: [describe plan]. Assume it launched and failed completely in 6 months. List the 7 most likely reasons for failure, ranked by probability. Be brutally honest. Then suggest one mitigation for each.'},
+  {label:'Stakeholder update writer',tag:'prompt',text:'Write a 3-bullet async Slack update for a VP audience. Outcome this week: [X]. Key risk: [Y]. Decision needed from leadership: [Z]. Tone: direct, confident, no jargon. Max 80 words total.'},
+  {label:'Competitive analysis',tag:'prompt',text:'Compare [Product A], [Product B], and [Product C] on: (1) core retention mechanic, (2) monetisation model, (3) onboarding approach, (4) biggest product weakness. Use a table format. End with: which company has the best product strategy and why in 3 sentences.'},
+  {label:'North Star + input metrics',tag:'prompt',text:'I am building [product type] for [user segment]. Define: (1) the single best North Star Metric and why, (2) 4 input metrics that drive it, (3) 2 guardrail metrics to protect, (4) one leading indicator I should watch weekly. Explain your reasoning.'},
+  {label:'30-60-90 day plan',tag:'prompt',text:'Write a 30-60-90 day plan for a new Director of Product joining [company name], which makes [brief description]. Format: 3 phases with 4 specific actions each. Tone: strategic, not operational. Show stakeholder management, discovery, and first bets.'},
+  {label:'Job description decoder',tag:'prompt',text:'Here is a job description for a Director PM role: [paste JD]. Extract: (1) the 3 things they actually care most about, (2) the unstated problems they are trying to solve, (3) 5 interview questions they will likely ask, (4) how I should position my RMG and OTT background for this role.'},
+  {label:'LinkedIn post writer',tag:'prompt',text:'Write a LinkedIn post about [topic/insight from my work]. Audience: product managers and hiring managers. Format: 2-sentence hook that creates curiosity → 3-line insight → 1-line takeaway. Tone: direct, specific, no corporate speak. Max 120 words. Give me 3 versions.'},
+];
+
+const toolsW1=[
+  {icon:'🤖',name:'Claude.ai',use:'Best for structured thinking, PRDs, memos',free:true,url:'https://claude.ai'},
+  {icon:'💬',name:'ChatGPT',use:'Best for brainstorming and quick ideation',free:true,url:'https://chat.openai.com'},
+  {icon:'🔍',name:'Perplexity',use:'Best for research — cites real sources',free:true,url:'https://perplexity.ai'},
+  {icon:'📝',name:'Notion AI',use:'Meeting notes, docs, summaries',free:false,url:'https://notion.so'},
+];
+const toolsW2=[
+  {icon:'🎯',name:'Gamma.app',use:'AI presentation builder — pitch decks in minutes',free:true,url:'https://gamma.app'},
+  {icon:'📊',name:'Rows.com',use:'AI-powered spreadsheets for PM analytics',free:true,url:'https://rows.com'},
+  {icon:'🗺️',name:'Whimsical AI',use:'Auto-generate flowcharts and user journey maps',free:true,url:'https://whimsical.com'},
+  {icon:'🎙️',name:'Otter.ai',use:'AI meeting transcription and summary',free:true,url:'https://otter.ai'},
+];
+const toolsCV=[
+  {icon:'📚',name:'Google AI Essentials',use:'Free Coursera cert — put it on LinkedIn',free:true,url:'https://grow.google/certificates/ai-essentials/'},
+  {icon:'🏆',name:'DeepLearning.AI short courses',use:'Free 1hr courses on prompting, RAG, agents',free:true,url:'https://learn.deeplearning.ai'},
+  {icon:'🔥',name:'Reforge AI for PMs',use:'The most respected PM AI credential',free:false,url:'https://reforge.com'},
+  {icon:'🧪',name:'Maven AI PM Cohort',use:'Live cohort, strong peer network',free:false,url:'https://maven.com'},
+];
+
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{done:{},streak:0,lastDay:'',startDay:Date.now()}}catch{return{done:{},streak:0,lastDay:'',startDay:Date.now()}}}
+function saveState(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch{}}
+let state=getState();
+let openConcepts={};
+let activeWeek='w1';
+
+function allTasks(){return weeks.flatMap(w=>w.tasks)}
+
+function dayNum(){return Math.min(30,Math.floor((Date.now()-state.startDay)/86400000)+1)}
+
+function checkStreak(){
+  const today=new Date().toDateString();
+  if(state.lastDay===today) return;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  state.streak=state.lastDay===yesterday?(state.streak||0)+1:1;
+  state.lastDay=today;
+  saveState(state);
+}
+
+function toggleTask(id){
+  state.done[id]=!state.done[id];
+  checkStreak();
+  saveState(state);
+  renderAll();
+}
+
+function resetAll(){if(confirm('Reset all AI learning progress?')){state={done:{},streak:0,lastDay:'',startDay:Date.now()};saveState(state);renderAll();}}
+
+function sw(name,el){
+  ['today','learn','prompts','tools','progress'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function copyPrompt(text,el){
+  navigator.clipboard.writeText(text).catch(()=>{});
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function renderAll(){
+  checkStreak();
+  const all=allTasks();
+  const doneCount=all.filter(t=>state.done[t.id]).length;
+  const pct=Math.round(doneCount/all.length*100);
+  const left=all.length-doneCount;
+  const day=dayNum();
+
+  document.getElementById('day-badge').textContent='Day '+day+' of 30';
+  document.getElementById('streak-pill').textContent='🔥 '+(state.streak||0)+' streak';
+  document.getElementById('h-done').textContent=doneCount;
+  document.getElementById('h-pct').textContent=pct+'%';
+  document.getElementById('h-left').textContent=left;
+  document.getElementById('p-done').textContent=doneCount;
+  document.getElementById('p-pct').textContent=pct+'%';
+  document.getElementById('p-streak').textContent=state.streak||0;
+
+  document.getElementById('daily-tip').textContent=tips[Math.floor(Date.now()/86400000)%tips.length];
+
+  // week selector
+  const ws=document.getElementById('week-selector');
+  ws.innerHTML='';
+  weeks.forEach(w=>{
+    const p=document.createElement('div');
+    p.className='week-pill'+(activeWeek===w.id?' active':'');
+    p.textContent=w.title.split('—')[0].trim();
+    p.onclick=()=>{activeWeek=w.id;renderAll()};
+    ws.appendChild(p);
+  });
+
+  const wk=weeks.find(w=>w.id===activeWeek);
+  document.getElementById('week-title').textContent=wk.title;
+  const tl=document.getElementById('week-tasks');
+  tl.innerHTML='';
+  wk.tasks.forEach(t=>{
+    const d=!!state.done[t.id];
+    const el=document.createElement('div');
+    el.className='task-item';
+    el.onclick=()=>toggleTask(t.id);
+    el.innerHTML=`<div class="check ${d?'done':''}"></div><div class="task-body"><div class="task-text ${d?'done':''}">${t.text}</div><div class="task-meta"><span class="tag tag-${t.tag}">${t.tag}</span><span class="effort">${t.effort}</span></div></div>`;
+    tl.appendChild(el);
+  });
+
+  // progress tab
+  const progEl=document.getElementById('week-progress');
+  progEl.innerHTML='';
+  weeks.forEach(w=>{
+    const total=w.tasks.length;
+    const done=w.tasks.filter(t=>state.done[t.id]).length;
+    const p=Math.round(done/total*100);
+    const d=document.createElement('div');
+    d.className='week-prog';
+    d.innerHTML=`<div class="wp-header"><span class="wp-title">${w.title}</span><span class="wp-count">${done}/${total}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${p}%;background:${w.color}"></div></div>`;
+    progEl.appendChild(d);
+  });
+}
+
+function renderConcepts(){
+  const el=document.getElementById('concepts-list');
+  concepts.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='concept-card';
+    const isOpen=!!openConcepts[c.title];
+    card.innerHTML=`
+      <div class="concept-header" onclick="toggleConcept('${c.title.replace(/'/g,"\\'")}',this)">
+        <div class="concept-icon" style="background:${c.bg}">${c.icon}</div>
+        <div class="concept-info">
+          <div class="concept-title">${c.title}</div>
+          <div class="concept-sub">${c.sub}</div>
+        </div>
+        <span class="chevron ${isOpen?'open':''}">›</span>
+      </div>
+      <div class="concept-body ${isOpen?'open':''}">
+        <p>${c.body}</p>
+        <div class="why">${c.why}</div>
+        <ul>${c.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+function toggleConcept(title,headerEl){
+  openConcepts[title]=!openConcepts[title];
+  const card=headerEl.closest('.concept-card');
+  card.querySelector('.concept-body').classList.toggle('open',!!openConcepts[title]);
+  card.querySelector('.chevron').classList.toggle('open',!!openConcepts[title]);
+}
+
+function renderPrompts(){
+  const el=document.getElementById('prompts-list');
+  prompts.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='prompt-box';
+    d.onclick=()=>copyPrompt(p.text,d);
+    d.innerHTML=`<div class="prompt-label">${p.label} — tap to copy</div><div class="prompt-text">${p.text.replace(/</g,'&lt;')}</div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderTools(){
+  function makeList(items,elId){
+    const el=document.getElementById(elId);
+    items.forEach(r=>{
+      const d=document.createElement('div');
+      d.className='tool-row';
+      d.onclick=()=>{if(r.url)window.open(r.url,'_blank')};
+      d.innerHTML=`<div class="tool-icon" style="background:#f2f2f7">${r.icon}</div><div class="tool-info"><div class="tool-name">${r.name}</div><div class="tool-use">${r.use}</div></div><span class="free-badge ${r.free?'free':'paid'}">${r.free?'Free':'Paid'}</span>`;
+      el.appendChild(d);
+    });
+  }
+  makeList(toolsW1,'tools-w1');
+  makeList(toolsW2,'tools-w2');
+  makeList(toolsCV,'tools-cv');
+}
+
+renderConcepts();
+renderPrompts();
+renderTools();
+renderAll();
+</script>
+</body>
+</html>
